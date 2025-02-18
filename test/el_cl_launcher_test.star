@@ -105,8 +105,6 @@ def test_launch_with_defaults(plan):
             "--p2p.listen.tcp=9003",
             "--p2p.listen.udp=9003",
             "--safedb.path=/data/op-node/op-node-beacon-data",
-            "--altda.enabled={0}".format(da_server_context.enabled),
-            "--altda.da-server={0}".format(da_server_context.http_url),
             "--metrics.enabled=true",
             "--metrics.addr=0.0.0.0",
             "--metrics.port=9001",

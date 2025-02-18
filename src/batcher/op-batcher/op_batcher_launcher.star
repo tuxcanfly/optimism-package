@@ -106,8 +106,6 @@ def get_batcher_config(
         # da commitments currently have to be sent as calldata to the batcher inbox
         "--data-availability-type="
         + ("calldata" if da_server_context.enabled else "blobs"),
-        "--altda.enabled=" + str(da_server_context.enabled),
-        "--altda.da-server=" + da_server_context.http_url,
         # This flag is very badly named, but is needed in order to let the da-server compute the commitment.
         # This leads to sending POST requests to /put instead of /put/<keccak256(data)>
         "--altda.da-service",
