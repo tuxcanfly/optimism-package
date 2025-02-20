@@ -38,12 +38,24 @@ def launch_da_server(
 
     da_server_service = plan.add_service(service_name, config)
 
+    # Wait for port 26658 to be available
+    plan.wait_for_http_get(
+        "http://{0}:{1}".format(da_server_service.ip_address, DA_SERVER_HTTP_PORT_NUM),
+        max_wait_secs=60,  # Adjust timeout as needed
+    )
+
+    # Execute the command inside the container
+    auth_token, _ = da_server_service.exec(
+        ["celestia", "bridge", "auth", "admin", "--node.store", "/home/celestia/bridge"]
+    )
+
     http_url = "http://{0}:{1}".format(
         da_server_service.ip_address, DA_SERVER_HTTP_PORT_NUM
     )
-    # da_server_context is passed as argument to op-batcher and op-node(s)
+
     return new_da_server_context(
         http_url=http_url,
+        auth_token=auth_token.strip(),
     )
 
 
@@ -66,11 +78,13 @@ def get_da_server_config(
 def disabled_da_server_context():
     return new_da_server_context(
         http_url="",
+        auth_token="",
     )
 
 
-def new_da_server_context(http_url):
+def new_da_server_context(http_url, auth_token=""):
     return struct(
         enabled=http_url != "",
         http_url=http_url,
+        auth_token=auth_token,
     )
