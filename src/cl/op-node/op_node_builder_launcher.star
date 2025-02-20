@@ -178,9 +178,6 @@ def get_beacon_config(
         "--p2p.listen.ip=0.0.0.0",
         "--p2p.listen.tcp={0}".format(BEACON_DISCOVERY_PORT_NUM),
         "--p2p.listen.udp={0}".format(BEACON_DISCOVERY_PORT_NUM),
-        "--da.rpc=" + da_server_context.http_url,
-        "--da.auth_token=123",
-        "--da.namespace=00000000000000000000000000000000000000000008e5f679bf7116cb",
     ]
 
     sequencer_private_key = util.read_network_config_value(
