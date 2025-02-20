@@ -35,29 +35,43 @@ def launch_da_server(
         image,
         cmd,
     )
-
-    da_server_service = plan.add_service(service_name, config)
-
-    # Wait for port 26658 to be available
-    plan.wait_for_http_get(
-        "http://{0}:{1}".format(da_server_service.ip_address, DA_SERVER_HTTP_PORT_NUM),
-        max_wait_secs=60,  # Adjust timeout as needed
-    )
-
-    # Execute the command inside the container
-    auth_token, _ = da_server_service.exec(
-        ["celestia", "bridge", "auth", "admin", "--node.store", "/home/celestia/bridge"]
-    )
+    da_server_service = plan.add_service(name=service_name, config=config)
 
     http_url = "http://{0}:{1}".format(
         da_server_service.ip_address, DA_SERVER_HTTP_PORT_NUM
     )
 
-    return new_da_server_context(
-        http_url=http_url,
-        auth_token=auth_token.strip(),
+    # Wait for port 26658 to be available using the wait instruction with an HTTP request
+    wait_recipe = GetHttpRequestRecipe(
+        port=DA_SERVER_HTTP_PORT_ID,
+        endpoint="/"
     )
 
+    plan.wait(
+        service_name=service_name,
+        recipe=wait_recipe,
+        field="code",
+        assertion="==",
+        target_value=200,
+        interval="1s",
+        timeout="30s",
+        description="Waiting for DA server HTTP endpoint to be available"
+    )
+
+    # Fetch the auth token using run_sh
+    auth_token_result = plan.run_sh(
+        run="celestia bridge auth admin --node.store /home/celestia/bridge",
+        image=image,  # Use the same image as the DA server
+        description="Fetching DA server auth token"
+    )
+
+    # Strip whitespace from the auth token output
+    auth_token = auth_token_result.output.strip()
+
+    return new_da_server_context(
+        http_url=http_url,
+        auth_token=auth_token
+    )
 
 def get_da_server_config(
     plan,
