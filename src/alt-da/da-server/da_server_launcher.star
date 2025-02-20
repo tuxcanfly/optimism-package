@@ -9,7 +9,7 @@ constants = import_module(
 DA_SERVER_HTTP_PORT_ID = "http"
 
 # Port nums
-DA_SERVER_HTTP_PORT_NUM = 3100
+DA_SERVER_HTTP_PORT_NUM = 26658
 
 
 def get_used_ports():
