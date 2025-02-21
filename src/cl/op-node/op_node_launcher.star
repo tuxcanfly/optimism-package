@@ -195,7 +195,7 @@ def get_beacon_config(
         "--p2p.listen.udp={0}".format(BEACON_DISCOVERY_PORT_NUM),
         "--safedb.path={0}".format(BEACON_DATA_DIRPATH_ON_SERVICE_CONTAINER),
         "--da.rpc=" + da_server_context.http_url,
-        "--da.auth_token=123",
+        "--da.auth_token=" + da_server_context.auth_token,
         "--da.namespace=00000000000000000000000000000000000000000008e5f679bf7116cb",
     ]
 

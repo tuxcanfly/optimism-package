@@ -104,7 +104,7 @@ def get_batcher_config(
         "--l1-eth-rpc=" + l1_config_env_vars["L1_RPC_URL"],
         "--private-key=" + gs_batcher_private_key,
         "--da.rpc=" + da_server_context.http_url,
-        "--da.auth_token=123",
+        "--da.auth_token=" + da_server_context.auth_token,
         "--da.namespace=00000000000000000000000000000000000000000008e5f679bf7116cb",
     ]
 
